@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>synapticupload</title>
-    <link>synapticupload.github.io/</link>
-    <description>Recent content on synapticupload</description>
+    <title>Posts on synapticupload</title>
+    <link>synapticupload.github.io/posts/</link>
+    <description>Recent content in Posts on synapticupload</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 11 Jun 2020 09:19:16 -0500</lastBuildDate>
     
-	<atom:link href="synapticupload.github.io/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="synapticupload.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
