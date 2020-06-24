@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width">
 		
 
-		<title>crackmes.one (Very Easy) (.NET)</title>
+		<title>crackmes.one (5ca5c1ac33c5d4419da556de) (.NET) (Very Easy)</title>
 
 		
 		<link rel="stylesheet" href="/synapticupload.github.io/css/colors-dark.min.14df29dc468d31c46cb59a9b259c6e5c1623b01cee7d55d63f81e588d3496fc6.css">
@@ -41,9 +41,24 @@
 			<div id="content">
 				
 	<article class="post">
-		<h1><a href="synapticupload.github.io/posts/crackmes-dotnet-number1/">crackmes.one (Very Easy) (.NET)</a> </h1>
+		<h1><a href="synapticupload.github.io/posts/crackmes-dotnet-number1/">crackmes.one (5ca5c1ac33c5d4419da556de) (.NET) (Very Easy)</a> </h1>
 
-		<div class="post-content"><p><img src="/images/crackme-1-die.PNG" alt="figure 1.0"></p>
+		<div class="post-content"><p>After downloading and extracting the crackme, Detect It Easy verifies it is a .NET executable.</p>
+<p><img src="/images/crackme-1-die.PNG" alt="figure 1.0"></p>
+<p>On my FLARE VM, I put the program in the dotNET directory. I&rsquo;ll be using the &ldquo;ILSpy&rdquo; utility.</p>
+<p><img src="/images/crackme-about-to-use-ilspy.PNG" alt="figure 2.0"></p>
+<p>After dragging and dropping, expanding InfoSecInstitute_dotNET_Reversing and going to Form1 will give us a decompilation.</p>
+<p><img src="/images/crackme-2-expandForm.PNG" alt="figure 3.0"></p>
+<p>As you can see, the password is pretty much right there and that&rsquo;s all we need to do for this crackme.</p>
+<p>If we look at the program itself, it consists of a simple popup where you input a password and press the check button.</p>
+<p><img src="/images/crackme-4-check-button-shown.PNG" alt="figure 4.0"></p>
+<p>We want to follow the code down to InitializeComponent(), where we can see area where the buttons, labels, etc. are being used.</p>
+<p><img src="/images/crackmes-5-initializecomponent-btn_chk.PNG" alt="figure 5.0"></p>
+<p>Double clicking on the btn_Chk brings us up to another block of code where we see btn_Chk_Click.</p>
+<p><img src="/images/crackme-6-btn_check_to_Click.PNG" alt="figure 6.0"></p>
+<p>After clicking on that inside of ILSpy, we&rsquo;re brought over to the btn_Chk_Click section.</p>
+<p><img src="/images/crackme-7-chk_click.PNG" alt="figure 7.0"></p>
+<p>It&rsquo;s pretty self explanatory what happens here, if the string compares to the correct password, we receive the appropriate message.</p>
 </div>
 
 		<p class="meta">Posted on <span class="postdate">23. June 2020</span></p>
