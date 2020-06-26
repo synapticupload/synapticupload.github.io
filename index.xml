@@ -1,36 +1,27 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>synapticupload</title>
-    <link>synapticupload.github.io/</link>
-    <description>Recent content on synapticupload</description>
+    <title>SynapticUpload</title>
+    <link>/</link>
+    <description>Recent content on SynapticUpload</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 23 Jun 2020 21:38:37 -0500</lastBuildDate>
     
-	<atom:link href="synapticupload.github.io/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>crackmes.one (5ca5c1ac33c5d4419da556de) (.NET) (Very Easy)</title>
-      <link>synapticupload.github.io/posts/crackmes-dotnet-number1/</link>
+      <link>/posts/crackmes-5ca5c1ac33c5d4419da556de/</link>
       <pubDate>Tue, 23 Jun 2020 21:38:37 -0500</pubDate>
       
-      <guid>synapticupload.github.io/posts/crackmes-dotnet-number1/</guid>
+      <guid>/posts/crackmes-5ca5c1ac33c5d4419da556de/</guid>
       <description>After downloading and extracting the crackme, Detect It Easy verifies it is a .NET executable.
 On my FLARE VM, I put the program in the dotNET directory. I&amp;rsquo;ll be using the &amp;ldquo;ILSpy&amp;rdquo; utility.
 After dragging and dropping, expanding InfoSecInstitute_dotNET_Reversing and going to Form1 will give us a decompilation.
 As you can see, the password is pretty much right there and that&amp;rsquo;s all we need to do for this crackme.
 If we look at the program itself, it consists of a simple popup where you input a password and press the check button.</description>
-    </item>
-    
-    <item>
-      <title>First</title>
-      <link>synapticupload.github.io/posts/first/</link>
-      <pubDate>Thu, 11 Jun 2020 09:19:16 -0500</pubDate>
-      
-      <guid>synapticupload.github.io/posts/first/</guid>
-      <description></description>
     </item>
     
   </channel>
