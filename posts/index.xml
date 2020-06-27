@@ -6,10 +6,21 @@
     <description>Recent content in Posts on SynapticUpload</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 23 Jun 2020 21:38:37 -0500</lastBuildDate>
+    <lastBuildDate>Sat, 27 Jun 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>crackmes.one (5ab77f6633c5d40ad448cbdf) (Borland Delphi) (Very Easy)</title>
+      <link>/posts/crackmes-5ab77f6633c5d40ad448cbdf/</link>
+      <pubDate>Sat, 27 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/crackmes-5ab77f6633c5d40ad448cbdf/</guid>
+      <description>In my last post I demonstrated a very simple .NET crackme. In this post I&amp;rsquo;ll write about a Bordland Delphi file from crackmes.one, walking through the assembly and creating a keygen in python. Delphi files are new to me so this will be a first.
+First thing is first, let&amp;rsquo;s check out the README.
+The author is TripleTordo, releasing the crackme on December 20, 2010 with a difficulty level of 1/10.</description>
+    </item>
     
     <item>
       <title>crackmes.one (5ca5c1ac33c5d4419da556de) (.NET) (Very Easy)</title>

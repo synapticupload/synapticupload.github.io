@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		
+
+		<title>crackmes.one (5ab77f6633c5d40ad448cbdf) (Borland Delphi) (Very Easy)</title>
+
+		
+		<link rel="stylesheet" href="/css/colors-dark.min.af3d378acdfd40fca8e4763cd9d6923e8c73fa451d7c8bc1fc8f8bec526255a7.css">
+
+		
+	</head>
+	<body>
+		<header id="header">
+			<h1><a href="/">SynapticUpload</a></h1>
+			<p>Just curious about computer things.</p>
+		</header>
+
+		<div id="page">
+			<div id="sidebar">
+				<nav>
+	
+		<ul class="nav">
+			
+				<li><a href="https://github.com/synapticupload"><span>github</span></a></li>
+			
+		</ul>
+	
+</nav>
+
+			</div>
+
+			<div id="content">
+				
+	<article class="post">
+		<h1><a href="/posts/crackmes-5ab77f6633c5d40ad448cbdf/">crackmes.one (5ab77f6633c5d40ad448cbdf) (Borland Delphi) (Very Easy)</a> </h1>
+
+		<div class="post-content"><p>In my last post I demonstrated a very simple .NET crackme. In this post I&rsquo;ll write about a Bordland Delphi file from crackmes.one, walking through the assembly and creating a keygen in python. Delphi files are new to me so this will be a first.</p>
+<p>First thing is first, let&rsquo;s check out the README.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-1.PNG" alt="figure 1.0"></p>
+<p>The author is TripleTordo, releasing the crackme on December 20, 2010 with a difficulty level of 1/10. It&rsquo;s his third crackme.</p>
+<p>Inspecting the file in Detect It Easy shows it is a Borland Delphi file.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-2.PNG" alt="figure 1.0"></p>
+<p>On my FLARE VM, I&rsquo;ll follow it up with the Interactive Delphi Reconstructor.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-3.PNG" alt="figure 1.0"></p>
+<p>After dragging and dropping, we&rsquo;re met with the main GUI of IDR.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-4.PNG" alt="figure 1.0"></p>
+<p>We can see at the entry point we&rsquo;re dealing with some forms. F5 brings us to the form window.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-5.PNG" alt="figure 1.0"></p>
+<p>Selecting the Form radio button and double clicking Form1 shows us what displays when ran.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-6.PNG" alt="figure 1.0"></p>
+<p>A component window, along with a popup visual of the form is displayed.</p>
+<p>Double clicking on the TForm1.Button1Click line in the component window brings us right to the function. I toke note of address 4537EC.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-7.PNG" alt="figure 1.0"></p>
+<p>If we scroll through, we can see some key strings letting us know we&rsquo;re in the right place.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-8.PNG" alt="figure 1.0"></p>
+<p>Now that I have a bearing on position, I swapped to IDA, browsing to 4537EC. Within this function, we can see the same data we saw earlier.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-10.PNG" alt="figure 1.0"></p>
+<p>Looking at the graph overview, we can see that this length check on the name field is one of the first checks that happen. Look at the red line that extends from this block all the way back up to the top. We&rsquo;ll head there next.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-11.PNG" alt="figure 1.0"></p>
+<p>In the above image, I went ahead and renamed the address to &ldquo;checkNameLength&rdquo;. We can see the result of a subroutine getting passed into var_14 and compared against 5. If it&rsquo;s not 5+, we are met with our error message.</p>
+<p>Let&rsquo;s confirm what happens in sub_408310, just before this check.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-12.PNG" alt="figure 1.0"></p>
+<p>Notice the &ldquo;repne scasb&rdquo;. &ldquo;scasb&rdquo; compares the AL register (lower 8 bits of eax) with the string sitting at the EDI register. Notice how the AL register was zeroized with an XOR instruction just prior to this instruction. Essentially, we&rsquo;re comparing each letter against 0, a null-byte. When SCASB comes across the end of the string, which should be a null character (0), it will see that both AL and the character are 0, in which SCASB will set the ZF (zero flag) in the flags register to 1.</p>
+<p>The key piece here is that the REPNE prefix causes the SCASB instruction to repeat while not equal. A lot of people get confused thinking it is &ldquo;repeat until not equal&rdquo;, but it is &ldquo;repeat while not equal&rdquo;. How does it know? REPNE has two conditions where it stops. It will stop when the ECX register reaches 0 (if you look at our subroutine, it was maxed out, so this wouldn&rsquo;t be realistic in this scenario), or it will stop when it sees that the ZF is activated.</p>
+<p>Scanning a set of values until hitting a null character is a common exercise in beginner C instruction to find the length of a string. You&rsquo;ll want to be familiar with how very small C functions like this break down into assembly so you can recognize them quicker.</p>
+<p>Enough with basic assembly, let&rsquo;s move on.</p>
+<p>The next key piece we want to look at is the first loop.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-14.PNG" alt="figure 1.0"></p>
+<p>We can see EBX getting set to 1, which is a possible counter. If you look at the very last block, we can see an INC EBX instruction which supports that.</p>
+<p>Looking back at location 45387C near the top block, var_10 is moved in and used as an address, which is increased by EBX - 1. It then seems to test for 0 repeatedly. If the value checks out, we compare it against 0xC8, or 200 in decimal. If it is less than 200, then we can move into our next section of code (notice the red arrow is what we want in this case).</p>
+<p>Looking at the last block closely, we can see how the value is used.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-15.PNG" alt="figure 1.0"></p>
+<p>0xC8 (or 200) is moved in to eax. We subtract 200 by EDI (our value), and then again by EBX (our counter). If I had to guess at this point, we might be subtracting our current character&rsquo;s ASCII value in the supplied Name field, and then subtracting the current counter.</p>
+<p>Let&rsquo;s test that theory while looking at TripleTordo&rsquo;s README.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-16.PNG" alt="figure 1.0"></p>
+<p>We can see the first letter is &lsquo;T&rsquo;, and the first number seems to be 115. Some quick python will put this to the test.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-17.PNG" alt="figure 1.0"></p>
+<p>It seems to match up. I hardcoded the 1 to represent our first iteration. Let&rsquo;s try the next couple characters.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-18.PNG" alt="figure 1.0"></p>
+<p>This seems to be accurate. The only thing throwing it off is the letter &lsquo;R&rsquo; at the end.</p>
+<p>Going back to IDA, we&rsquo;ll look at the next major portion of this subroutine.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-19.PNG" alt="figure 1.0"></p>
+<p>After the previous section, we&rsquo;re led by a red arrow to a switch statement. Switch statements are commonly seen in assembly via a jump table. While inspecting this area of code, we can see the top right block was automatically commented by IDA as a switch with 5 cases. The JA instruction is also commented as a jump table.</p>
+<p>We see EAX getting compared to 4, and if it is above 4, it jumps via the green arrow over to a default case. If not, it jumps down the red arrow to a jump table.</p>
+<p>EAX is multiplied by 4 to generate the address of code we will jump to next. It&rsquo;s all dependent on the value in EAX.</p>
+<p>Our case statements range from case 5 to 9 in numeric values. For example, based on the above image, if EAX is equal to the number 7, we can see IDA comments for the code that would execute.</p>
+<p>In each of these case statements, var_8 is moved into EAX, and a value at an offset is moved into EDX. Let&rsquo;s double click on that and see what it is.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-20.PNG" alt="figure 1.0"></p>
+<p>We&rsquo;re met with several values, including 54h, 52h, etc. Let&rsquo;s convert these to ASCII by clicking them and pressing &lsquo;r&rsquo; in IDA.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-21.PNG" alt="figure 1.0"></p>
+<p>It spells out TRIPLE! So depending on what is in EAX, I&rsquo;m assuming a letter from TRIPLE is added to the end of our key. But how does it know?</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-22.PNG" alt="figure 1.0"></p>
+<p>We see var_14 being used in the case statement. If you remember, the length of our supplied Name is placed into var_14 when it compared it against 5 in the very first check in this subroutine.</p>
+<hr>
+<p>At this point, we&rsquo;re armed with enough information to come up with a possible keygen. We know that by iterating through the supplied Name using a counter variable, and subtracting the current character&rsquo;s ASCII value combined with the value of our counter variable from the number 200, and then finally converting that into a string, we start piecing together our key. At the very end, we check the length of the Name supplied to tack on a final letter. I think we can whip something up in Python.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-23.PNG" alt="figure 1.0"></p>
+<p>Using Python 3, we&rsquo;ll first obtain a username and the length. We&rsquo;ll then mimic the checks we&rsquo;ve seen so far, we want to recreate and see as much as we can the programmer on the other end of this code.</p>
+<p>In python, where the numeric portion of the key is generated, we must convert the letter to its ordinal value. InC programming, we wouldn&rsquo;t have to do this, and would instead simply manipulate how we output the value in print statements. In Python in this particular regard, we need to do some more work.</p>
+<p>Finally we have our letter calculation.</p>
+<p>Based on the length, we extract a letter from the appendage array and tack it on to the end of our current key.</p>
+<p>Let&rsquo;s see if it works.</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-24.PNG" alt="figure 1.0"></p>
+<p>Here&rsquo;s the result of our keygen program&hellip;</p>
+<p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-25.PNG" alt="figure 1.0"></p>
+<p>Success!</p>
+</div>
+
+		<p class="meta">Posted on <span class="postdate">27. June 2020</span></p>
+	</article>
+
+			</div>
+
+			<footer id="footer">
+				<p class="copyright">
+					
+						Powered by <a href="https://gohugo.io/">Hugo</a> and the
+						<a href="https://github.com/bake/solar-theme-hugo">Solar</a>-theme.
+					
+				</p>
+			</footer>
+		</div>
+
+		
+	</body>
+</html>
