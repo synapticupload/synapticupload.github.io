@@ -37,28 +37,29 @@
 	<article class="post">
 		<h1><a href="/posts/crackmes-5ab77f6633c5d40ad448cbdf/">crackmes.one (5ab77f6633c5d40ad448cbdf) (Borland Delphi) (Very Easy)</a> </h1>
 
-		<div class="post-content"><p>In my last post I demonstrated a very simple .NET crackme. In this post I&rsquo;ll write about a Bordland Delphi file from crackmes.one, walking through the assembly and creating a keygen in python. Delphi files are new to me so this will be a first.</p>
-<p>First thing is first, let&rsquo;s check out the README.</p>
+		<div class="post-content"><p>In my last post I demonstrated a very simple .NET crackme. In this post I&rsquo;ll write about a Bordland Delphi file from crackmes.one, walk through some of the assembly and create a keygen in python. Delphi files are new to me so this will be a first.</p>
+<p>Let&rsquo;s start with the README.</p>
 <p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-1.PNG" alt="figure 1.0"></p>
 <p>The author is TripleTordo, releasing the crackme on December 20, 2010 with a difficulty level of 1/10. It&rsquo;s his third crackme.</p>
 <p>Inspecting the file in Detect It Easy shows it is a Borland Delphi file.</p>
 <p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-2.PNG" alt="figure 1.0"></p>
-<p>On my FLARE VM, I&rsquo;ll follow it up with the Interactive Delphi Reconstructor.</p>
+<p>On my FLARE VM, I&rsquo;ll follow it up with the Interactive Delphi Reconstructor in the Delphi folder.</p>
 <p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-3.PNG" alt="figure 1.0"></p>
-<p>After dragging and dropping, we&rsquo;re met with the main GUI of IDR.</p>
+<p>After dragging and dropping, we&rsquo;re met with the main interface.</p>
 <p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-4.PNG" alt="figure 1.0"></p>
 <p>We can see at the entry point we&rsquo;re dealing with some forms. F5 brings us to the form window.</p>
 <p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-5.PNG" alt="figure 1.0"></p>
-<p>Selecting the Form radio button and double clicking Form1 shows us what displays when ran.</p>
+<p>Selecting the Form radio button and double clicking Form1 in the left hand pane shows us what displays when ran.</p>
 <p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-6.PNG" alt="figure 1.0"></p>
-<p>A component window, along with a popup visual of the form is displayed.</p>
-<p>Double clicking on the TForm1.Button1Click line in the component window brings us right to the function. I toke note of address 4537EC.</p>
+<p>A component window, along with a popup visual of the form is displayed. This is what we see when we actually run the program.</p>
+<p>Double clicking on the TForm1.Button1Click line in the component window brings us right to the function.</p>
 <p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-7.PNG" alt="figure 1.0"></p>
-<p>If we scroll through, we can see some key strings letting us know we&rsquo;re in the right place.</p>
+<p>I took note of address 4537EC, the first PUSH instruction.</p>
+<p>If we scroll through, we can see some strings letting us know we&rsquo;re in the right place.</p>
 <p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-8.PNG" alt="figure 1.0"></p>
-<p>Now that I have a bearing on position, I swapped to IDA, browsing to 4537EC. Within this function, we can see the same data we saw earlier.</p>
+<p>Now that I have a bearing on position, I swapped to IDA, browsing to 4537EC as noted previously. Within this function, we can see the same string we found earlier.</p>
 <p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-10.PNG" alt="figure 1.0"></p>
-<p>Looking at the graph overview, we can see that this length check on the name field is one of the first checks that happen. Look at the red line that extends from this block all the way back up to the top. We&rsquo;ll head there next.</p>
+<p>Looking at the graph overview, we can see that this length check on the name field is one of the first checks that happen. Look at the red line that extends from this block all the way back up to the top on the left hand side of the graph overview. We&rsquo;ll examine this next.</p>
 <p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-11.PNG" alt="figure 1.0"></p>
 <p>In the above image, I went ahead and renamed the address to &ldquo;checkNameLength&rdquo;. We can see the result of a subroutine getting passed into var_14 and compared against 5. If it&rsquo;s not 5+, we are met with our error message.</p>
 <p>Let&rsquo;s confirm what happens in sub_408310, just before this check.</p>
@@ -98,14 +99,13 @@
 <p>At this point, we&rsquo;re armed with enough information to come up with a possible keygen. We know that by iterating through the supplied Name using a counter variable, and subtracting the current character&rsquo;s ASCII value combined with the value of our counter variable from the number 200, and then finally converting that into a string, we start piecing together our key. At the very end, we check the length of the Name supplied to tack on a final letter. I think we can whip something up in Python.</p>
 <p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-23.PNG" alt="figure 1.0"></p>
 <p>Using Python 3, we&rsquo;ll first obtain a username and the length. We&rsquo;ll then mimic the checks we&rsquo;ve seen so far, we want to recreate and see as much as we can the programmer on the other end of this code.</p>
-<p>In python, where the numeric portion of the key is generated, we must convert the letter to its ordinal value. InC programming, we wouldn&rsquo;t have to do this, and would instead simply manipulate how we output the value in print statements. In Python in this particular regard, we need to do some more work.</p>
-<p>Finally we have our letter calculation.</p>
-<p>Based on the length, we extract a letter from the appendage array and tack it on to the end of our current key.</p>
-<p>Let&rsquo;s see if it works.</p>
+<p>In python, where the numeric portion of the key is generated, we must convert the letter to its ordinal value. In C programming, we wouldn&rsquo;t have to do this, and would instead simply manipulate how we output the value in print statements.</p>
+<p>Finally we have our letter calculation. Based on the length, we extract a letter from the appendage array and tack it on to the end of our current key.</p>
+<p>Let&rsquo;s run our python code.</p>
 <p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-24.PNG" alt="figure 1.0"></p>
-<p>Here&rsquo;s the result of our keygen program&hellip;</p>
+<p>We supplied a username, and it gave us back a key. Let&rsquo;s see if it works&hellip;</p>
 <p><img src="/images/crackme-5ab77f6633c5d40ad448cbdf-25.PNG" alt="figure 1.0"></p>
-<p>Success!</p>
+<p>Looks like our key generator works!</p>
 </div>
 
 		<p class="meta">Posted on <span class="postdate">27. June 2020</span></p>
