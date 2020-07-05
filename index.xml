@@ -12,6 +12,16 @@
     
     
     <item>
+      <title>Welcome</title>
+      <link>/about/</link>
+      <pubDate>Wed, 01 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/about/</guid>
+      <description>Hello, and welcome to my website. Ever since diving into the world of computers and technology, I&amp;rsquo;ve become more curious about all things underground in this arena. I enjoy learning about everything from nation state campaigns, computing and hacking history, and more. In my spare time, I work on variety of challenges, whether that is hackthebox.eu, crackmes.one, CTFtime.org, and many others. I&amp;rsquo;m currently most interested in reverse engineering.
+In no strict order or apparent schema, you&amp;rsquo;ll see me writing about various topics.</description>
+    </item>
+    
+    <item>
       <title>crackmes.one (5ab77f6633c5d40ad448cbdf) (Borland Delphi) (Very Easy)</title>
       <link>/posts/crackmes-5ab77f6633c5d40ad448cbdf/</link>
       <pubDate>Sat, 27 Jun 2020 00:00:00 +0000</pubDate>
