@@ -49,6 +49,18 @@
 				
 	
 		<article class="post">
+			<h1><a href="/posts/challenges-re-2/">challenges.re (problem #2)</a> </h1>
+
+			<div class="post-content">
+				<p>I recently came across Dennis Yurichev&rsquo;s reversing challenge website not too long ago. He&rsquo;s made it very easy to access problem sets regarding assembly.
+In Problem #2, he presents the following assembly:
+&lt;f&gt;: 0: mov eax,DWORD PTR [esp+0x4] 4: bswap eax 6: mov edx,eax 8: and eax,0xf0f0f0f d: and edx,0xf0f0f0f0 13: shr edx,0x4 16: shl eax,0x4 19: or eax,edx 1b: mov edx,eax 1d: and eax,0x33333333 22: and edx,0xcccccccc 28: shr edx,0x2 2b: shl eax,0x2 2e: or eax,edx 30: mov edx,eax 32: and eax,0x55555555 37: and edx,0xaaaaaaaa 3d: add eax,eax 3f: shr edx,1 41: or eax,edx 43: ret I like to write out something similar to help digest the problem.  … </p>
+			</div>
+
+			<p class="meta">Posted on <span class="postdate">14. July 2020</span></p>
+		</article>
+	
+		<article class="post">
 			<h1><a href="/posts/crackmes-5ab77f6633c5d40ad448cbdf/">crackmes.one (5ab77f6633c5d40ad448cbdf) (Borland Delphi) (Very Easy)</a> </h1>
 
 			<div class="post-content">

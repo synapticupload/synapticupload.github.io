@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		
+
+		<title>challenges.re (problem #2)</title>
+
+		
+		<link rel="stylesheet" href="/css/colors-dark.min.72c74ee8997a6d5fd28ff52a76e5437034613db1ffa6498f720e0d3d3d1c323a.css">
+
+		
+	</head>
+	<body>
+		<header id="header">
+			<h1><a href="/">SynapticUpload</a></h1>
+			<p>Just curious about computer things.</p>
+		</header>
+
+		<div id="page">
+			<div id="sidebar">
+				<nav>
+	
+		<ul class="nav">
+			
+				<li><a href="/about/"><span>welcome</span></a></li>
+			
+				<li><a href="/"><span>posts</span></a></li>
+			
+		</ul>
+	
+		<ul class="nav">
+			
+				<li><a href="https://github.com/synapticupload"><span>github</span></a></li>
+			
+				<li><a href="https://twitter.com/synapticupload"><span>twitter</span></a></li>
+			
+		</ul>
+	
+</nav>
+
+			</div>
+
+			<div id="content">
+				
+	<article class="post">
+		<h1><a href="/posts/challenges-re-2/">challenges.re (problem #2)</a> </h1>
+
+		<div class="post-content"><p>I recently came across Dennis Yurichev&rsquo;s reversing challenge website not too long ago. He&rsquo;s made it very easy to access problem sets regarding assembly.</p>
+<p>In Problem #2, he presents the following assembly:</p>
+<div class="highlight"><pre class="chroma"><code class="language-NASM" data-lang="NASM"><span class="err">&lt;</span><span class="nf">f</span><span class="o">&gt;</span><span class="p">:</span>
+   <span class="err">0:</span>          <span class="nf">mov</span>    <span class="nb">eax</span><span class="p">,</span><span class="kt">DWORD</span> <span class="nv">PTR</span> <span class="p">[</span><span class="nb">esp</span><span class="o">+</span><span class="mh">0x4</span><span class="p">]</span>
+   <span class="err">4:</span>          <span class="nf">bswap</span>  <span class="nb">eax</span>
+   <span class="err">6:</span>          <span class="nf">mov</span>    <span class="nb">edx</span><span class="p">,</span><span class="nb">eax</span>
+   <span class="err">8:</span>          <span class="nf">and</span>    <span class="nb">eax</span><span class="p">,</span><span class="mh">0xf0f0f0f</span>
+   <span class="nl">d:</span>          <span class="nf">and</span>    <span class="nb">edx</span><span class="p">,</span><span class="mh">0xf0f0f0f0</span>
+  <span class="err">13:</span>          <span class="nf">shr</span>    <span class="nb">edx</span><span class="p">,</span><span class="mh">0x4</span>
+  <span class="err">16:</span>          <span class="nf">shl</span>    <span class="nb">eax</span><span class="p">,</span><span class="mh">0x4</span>
+  <span class="err">19:</span>          <span class="nf">or</span>     <span class="nb">eax</span><span class="p">,</span><span class="nb">edx</span>
+  <span class="err">1</span><span class="nl">b:</span>          <span class="nf">mov</span>    <span class="nb">edx</span><span class="p">,</span><span class="nb">eax</span>
+  <span class="err">1</span><span class="nl">d:</span>          <span class="nf">and</span>    <span class="nb">eax</span><span class="p">,</span><span class="mh">0x33333333</span>
+  <span class="err">22:</span>          <span class="nf">and</span>    <span class="nb">edx</span><span class="p">,</span><span class="mh">0xcccccccc</span>
+  <span class="err">28:</span>          <span class="nf">shr</span>    <span class="nb">edx</span><span class="p">,</span><span class="mh">0x2</span>
+  <span class="err">2</span><span class="nl">b:</span>          <span class="nf">shl</span>    <span class="nb">eax</span><span class="p">,</span><span class="mh">0x2</span>
+  <span class="err">2</span><span class="nl">e:</span>          <span class="nf">or</span>     <span class="nb">eax</span><span class="p">,</span><span class="nb">edx</span>
+  <span class="err">30:</span>          <span class="nf">mov</span>    <span class="nb">edx</span><span class="p">,</span><span class="nb">eax</span>
+  <span class="err">32:</span>          <span class="nf">and</span>    <span class="nb">eax</span><span class="p">,</span><span class="mh">0x55555555</span>
+  <span class="err">37:</span>          <span class="nf">and</span>    <span class="nb">edx</span><span class="p">,</span><span class="mh">0xaaaaaaaa</span>
+  <span class="err">3</span><span class="nl">d:</span>          <span class="nf">add</span>    <span class="nb">eax</span><span class="p">,</span><span class="nb">eax</span>
+  <span class="err">3</span><span class="nl">f:</span>          <span class="nf">shr</span>    <span class="nb">edx</span><span class="p">,</span><span class="mi">1</span>
+  <span class="err">41:</span>          <span class="nf">or</span>     <span class="nb">eax</span><span class="p">,</span><span class="nb">edx</span>
+  <span class="err">43:</span>          <span class="nf">ret</span>
+</code></pre></div><p>I like to write out something similar to help digest the problem. What&rsquo;s occuring above is a bit reversal.</p>
+<p>In this first section I just make sure I can store the number in a format I can manipulate.</p>
+<div class="highlight"><pre class="chroma"><code class="language-Python" data-lang="Python"><span class="k">def</span> <span class="nf">swap32</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&#34;&lt;I&#34;</span><span class="p">,</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&#34;&gt;I&#34;</span><span class="p">,</span> <span class="n">i</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div><p>I then start creating the main equivalent. Usually I prefer C, especially for low level tasks like this, but decided to use Python.</p>
+<div class="highlight"><pre class="chroma"><code class="language-Python" data-lang="Python"><span class="k">def</span> <span class="nf">bit_reversal</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Initial binary: &#34;</span> <span class="o">+</span> <span class="s1">&#39;{:032b}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="n">swap32</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Swapped binary: &#34;</span> <span class="o">+</span> <span class="s1">&#39;{:032b}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+</code></pre></div><p>I noticed a pattern in the assembly and saw we go through 3 main rounds.</p>
+<div class="highlight"><pre class="chroma"><code class="language-Python" data-lang="Python">
+    <span class="c1"># round 1</span>
+    <span class="c1"># ----------------------------------</span>
+    <span class="n">eax</span> <span class="o">=</span> <span class="n">num</span>
+    <span class="n">edx</span> <span class="o">=</span> <span class="n">num</span>
+
+    <span class="n">eax</span> <span class="o">=</span> <span class="n">eax</span> <span class="o">&amp;</span>  <span class="mh">0xf0f0f0f</span>
+    <span class="n">eax</span> <span class="o">=</span> <span class="n">eax</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span>
+    <span class="n">edx</span> <span class="o">=</span> <span class="n">edx</span> <span class="o">&amp;</span> <span class="mh">0xf0f0f0f0</span>
+    <span class="n">eax</span> <span class="o">=</span> <span class="n">eax</span> <span class="o">|</span> <span class="n">edx</span>
+
+    <span class="c1"># round 2</span>
+    <span class="c1"># ----------------------------------</span>
+    <span class="c1">#</span>
+    <span class="n">edx</span> <span class="o">=</span> <span class="n">eax</span>
+    <span class="n">eax</span> <span class="o">=</span> <span class="n">eax</span> <span class="o">&amp;</span> <span class="mh">0x33333333</span>
+    <span class="n">eax</span> <span class="o">=</span> <span class="n">eax</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span>
+    <span class="n">edx</span> <span class="o">=</span> <span class="n">edx</span> <span class="o">&amp;</span> <span class="mh">0xcccccccc</span>
+    <span class="n">edx</span> <span class="o">=</span> <span class="n">edx</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span>
+    <span class="n">eax</span> <span class="o">=</span> <span class="n">eax</span> <span class="o">|</span> <span class="n">edx</span>
+
+    <span class="c1"># round 3</span>
+    <span class="c1"># ----------------------------------</span>
+    <span class="c1">#</span>
+    <span class="n">edx</span> <span class="o">=</span> <span class="n">eax</span>
+    <span class="n">eax</span> <span class="o">=</span> <span class="n">eax</span> <span class="o">&amp;</span> <span class="mh">0x55555555</span>
+    <span class="n">eax</span> <span class="o">=</span> <span class="n">eax</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">edx</span> <span class="o">=</span> <span class="n">edx</span> <span class="o">&amp;</span> <span class="mh">0xaaaaaaaa</span>
+    <span class="n">edx</span> <span class="o">=</span> <span class="n">edx</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span>
+    <span class="n">eax</span> <span class="o">=</span> <span class="n">eax</span> <span class="o">|</span> <span class="n">edx</span>
+</code></pre></div><p>I then have a statement designed to print out the result.</p>
+<div class="highlight"><pre class="chroma"><code class="language-Python" data-lang="Python">    <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Round 3 binary: &#34;</span> <span class="o">+</span> <span class="s1">&#39;{:032b}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">eax</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Final swapped:  &#34;</span> <span class="o">+</span> <span class="s1">&#39;{:032b}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">swap32</span><span class="p">(</span><span class="n">eax</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">()</span>
+</code></pre></div><p>Finally, we execute with a number.</p>
+<div class="highlight"><pre class="chroma"><code class="language-Python" data-lang="Python"><span class="n">bit_reversal</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+</code></pre></div><p>I noticed something interesting when I was doing this in Python. It looks like the code is swapping the bits in each nibble, instead of simply reversing all bits. The following snippet reverses the bits for the nibbles in the value 64.</p>
+<pre><code>$ python 2.py
+Initial binary: 00000000000000000000000001000000
+Swapped binary: 01000000000000000000000000000000
+Round 3 binary: 00100000000000000000000000000000
+Final swapped:  00000000000000000000000000100000
+</code></pre><p>This is as far as I made it for now, I&rsquo;ll need to go back and figure out why the bit reversal is only occurring for each nibble.</p>
+</div>
+
+		<p class="meta">Posted on <span class="postdate">14. July 2020</span></p>
+	</article>
+
+			</div>
+
+			<footer id="footer">
+				<p class="copyright">
+					
+						Powered by <a href="https://gohugo.io/">Hugo</a> and the
+						<a href="https://github.com/bake/solar-theme-hugo">Solar</a>-theme.
+					
+				</p>
+			</footer>
+		</div>
+
+		
+	</body>
+</html>

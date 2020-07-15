@@ -1,0 +1,38 @@
+---
+title: "challenges-re-2"
+date: 2020-07-14
+draft: true
+---
+
+Credit goes to Dennis Yurichev for his work on https://challenges.re. I really enjoy this resource because many of the problems are straight up assembly code and your goal is to find out what's going on. It's really efficient as far as finding a problem to work at to keep your assembly skills sharp.
+
+In problem #2, Dennis presents us with the following assembly:
+
+``` nasm
+mov    eax,DWORD PTR [esp+0x4]
+bswap  eax
+mov    edx,eax
+and    eax,0xf0f0f0f
+and    edx,0xf0f0f0f0
+shr    edx,0x4
+shl    eax,0x4
+or     eax,edx
+mov    edx,eax
+and    eax,0x33333333
+and    edx,0xcccccccc
+shr    edx,0x2
+shl    eax,0x2
+or     eax,edx
+mov    edx,eax
+and    eax,0x55555555
+and    edx,0xaaaaaaaa
+add    eax,eax
+shr    edx,1
+or     eax,edx
+ret
+```
+
+If we inspect it at a higher level, we can see it is somewhat broken up into 3 sections. The back-to-back and instructions might help delineate it.
+
+I wrote the following python code to represent the above.
+
